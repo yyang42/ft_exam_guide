@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <string.h>
+#include <stdio.h>
 
 int ft_strlen(char *s)
 {
@@ -28,5 +29,7 @@ int main(void)
 	ft_strcat(s, "abc");
 	ft_strcat(s, "123");
 	assert(strcmp(s, "abc123") == 0);
+
+	printf("All tests passed!!!\n");
 	return (0);
 }
