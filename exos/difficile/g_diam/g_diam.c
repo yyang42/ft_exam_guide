@@ -12,6 +12,8 @@ t_node *node_new(int node_val)
 	node->visited = 0;
 	node->value = node_val;
 	node->links = malloc(100000);
+	node->cur_max = 0;
+	node->max = 0;
 	*(node->links) = NULL;
 	return (node);
 }
@@ -50,7 +52,6 @@ void	add_relation(t_node *node1, t_node *node2)
 	t_node **links;
 	int i;
 
-	// printf("node1 %d\n", node1->value);
 	links = node1->links;
 	i = 0;
 	while (links[i])
@@ -74,6 +75,7 @@ t_node *link_nodes(t_node **arr, char **segs)
 		node_val = ft_atoi(split_input(*segs, '-')[0]);
 		link_val = ft_atoi(split_input(*segs, '-')[1]);
 		add_relation(get_node(arr, node_val), get_node(arr, link_val));
+		add_relation(get_node(arr, link_val), get_node(arr, node_val));
 		segs++;
 	}
 	return (NULL);
@@ -89,46 +91,94 @@ t_node *build_graph(t_node **arr, char *str)
 	return (head);
 }
 
-int get_max_path_rec(t_node *node, int *max_path)
+void get_max_path_rec(t_node *node, int cur)
+{
+	t_node **links;
+
+	node->visited = 1;
+	links = node->links;
+	// printf("cur %d\n", cur);
+	// printf("enter node: %d\n", node->value);
+	cur++;
+	node->max = (cur < node->max ) ? node->max : cur;
+	while (*links)
+	{
+		if (!(*links)->visited)
+		{
+			get_max_path_rec(*links, cur);
+			(*links)->visited = 0;
+		}
+		links++;
+	}
+}
+
+void print_links(t_node *node)
 {
 	t_node **links;
 
 	links = node->links;
-	node->visited = 1;
 	while (*links)
 	{
-		(*max_path)++;
-		printf("node: %d : link %d\n", node->value, (*links)->value);
-		if (!(*links)->visited)
-			get_max_path_rec(*links, max_path);
+		// printf("node: %d\n", (*links)->value);
 		links++;
 	}
-	return (1);
 }
 
-int get_max_path(t_node **arr)
+int get_max_path_info(t_node **arr)
 {
-	int cur_max;
-	int prev_max;
+	int global_max;
 	int i;
 
-	prev_max = cur_max = 0;
+	global_max = 0;
 	i = 0;
 	while (i < 100000)
 	{
 		if (arr[i])
 		{
-			get_max_path_rec(arr[i], &cur_max);
-			if (prev_max < cur_max)
-				prev_max = cur_max;
-			cur_max = 0;
+			// printf("== start node %d ==\n", arr[i]->value);
+			print_links(arr[i]);
 		}
 		i++;
 	}
-	// printf("%d\n", max_path);
-	// printf("arr %d\n", arr[1]->value);
-	// printf("arr %d\n", arr[1]->links[0]->links[0]->value);
-	return (prev_max);
+	// printf("====================\n");
+	return (global_max);
+}
+
+void reset_graph(t_node **arr)
+{
+	int i;
+
+	i = 0;
+	while (i < 100000)
+	{
+		if (arr[i])
+		{
+			arr[i]->visited = 0;	
+		}
+		i++;
+	}
+}
+
+int get_max_path(t_node **arr)
+{
+	int global_max;
+	int i;
+
+	global_max = 0;
+	i = 0;
+	while (i < 100000)
+	{
+		if (arr[i])
+		{
+			// printf("== start node %d ==\n", arr[i]->value);
+			get_max_path_rec(arr[i], 1);
+			arr[i]->max--;
+			global_max = (global_max < arr[i]->max) ? arr[i]->max : global_max;
+			reset_graph(arr);
+		}
+		i++;
+	}
+	return (global_max);
 }
 
 void	g_diam(char *str)
@@ -137,6 +187,7 @@ void	g_diam(char *str)
 
 	arr = malloc(1000000);
 	build_graph(arr, str);
+	get_max_path_info(arr);
 	ft_putnbr(get_max_path(arr));
 }
 

@@ -6,7 +6,7 @@
 /*   By: yyang <yyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/12/18 10:38:03 by exam              #+#    #+#             */
-/*   Updated: 2015/01/27 22:10:15 by yyang            ###   ########.fr       */
+/*   Updated: 2015/01/28 10:42:20 by yyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ typedef struct 		s_node
 	int				visited;
 	int				value;
 	struct 	s_node	**links;
+	int				cur_max;
+	int				max;
 }					t_node;
 
 /*
