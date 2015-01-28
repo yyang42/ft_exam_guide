@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   maxlenoc.c                                         :+:      :+:    :+:   */
+/*   str_maxlenoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juschaef <juschaef@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yyang <yyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/12/19 21:42:22 by juschaef          #+#    #+#             */
-/*   Updated: 2014/12/19 21:54:32 by juschaef         ###   ########.fr       */
+/*   Updated: 2015/01/28 14:35:52 by yyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 int		ft_strlen(char *s)
 {
@@ -48,45 +50,57 @@ void	ft_strcpy(char *s1, char *s2)
 		;
 }
 
-char	*match(char *m, char *s)
+char	*ft_strdup(char *s)
 {
-	int i;
-	char cpy[10000];
-	char mm[1000];
+	char *d;
 
-	mm[0] = 0;
-	while (*m)
+	d = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
+	ft_strcpy(d, s);
+	return (d);
+}
+
+char 	*match_from_end(char *s, char *m)
+{
+	char *cpy;
+
+	cpy = ft_strdup(m);
+	while (*cpy)
 	{
-		i = ft_strlen(m);
-		ft_strcpy(cpy, m);
-		while (i > 0)
-		{
-			cpy[i] = 0;
-			if (ft_strstr(s, cpy) != 0)
-			{
-				if (ft_strlen(cpy) > ft_strlen(mm))
-					ft_strcpy(mm, cpy);
-			}
-			i--;
-		}
-		m++;
+		if (ft_strstr(s, cpy))
+			return (cpy);
+		cpy[ft_strlen(cpy) - 1] = 0;
 	}
-	ft_strcpy(m, mm);
-	return (m);
+	return (cpy);
+}
+
+char	*match(char *match, char *s)
+{
+	char *max;
+	char *cur_match;
+
+	max = ft_strdup("");
+	while (*match)
+	{
+		cur_match = match_from_end(s, match);
+		if (ft_strlen(cur_match) > ft_strlen(max))
+			max = cur_match;
+		match++;
+	}
+	return (max);
 }
 
 void	maxlenoc(char **ss)
 {
-	char *m;
+	char *cur_match;
 
-	m = ss[0];
+	cur_match = ss[0];
 	ss++;
 	while (*ss)
 	{
-		m = match(m, *ss);
+		cur_match = match(cur_match, *ss);
 		ss++;
 	}
-	write(1, m, ft_strlen(m));
+	write(1, cur_match, ft_strlen(cur_match));
 }
 
 int		main(int ac, char **av)
