@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yyang <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: yyang <yyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/28 17:40:42 by yyang             #+#    #+#             */
-/*   Updated: 2015/01/28 19:49:19 by yyang            ###   ########.fr       */
+/*   Updated: 2015/01/28 20:42:26 by yyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,6 @@ int ft_atoi(char *s);
 char *ft_itoa(int n);
 int ft_arr_len(void *arr);
 void ft_arr_swap(void *arr, int i, int j);
+char *ft_strdup(char *s);
+
 #endif

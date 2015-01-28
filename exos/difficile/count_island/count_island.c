@@ -107,7 +107,7 @@ char	*parsing(char *s)
 		buff[ret] = 0;
 		ft_strcat(map, buff);
 	}
-	tmp = strdup(map);
+	tmp = ft_strdup(map);
 	free(map)
 	return (tmp);
 }
