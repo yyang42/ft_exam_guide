@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include "libft.c"
 
+t_node *arr[1000000];
+
 t_node *node_new(int node_val)
 {
 	t_node *node;
@@ -12,7 +14,6 @@ t_node *node_new(int node_val)
 	node->visited = 0;
 	node->value = node_val;
 	node->links = malloc(100000);
-	node->cur_max = 0;
 	node->max = 0;
 	*(node->links) = NULL;
 	return (node);
@@ -65,7 +66,7 @@ void	add_relation(t_node *node1, t_node *node2)
 	links[i] = NULL;
 }
 
-t_node *link_nodes(t_node **arr, char **segs)
+void link_nodes(t_node **arr, char **segs)
 {
 	int node_val;
 	int link_val;
@@ -78,22 +79,20 @@ t_node *link_nodes(t_node **arr, char **segs)
 		add_relation(get_node(arr, link_val), get_node(arr, node_val));
 		segs++;
 	}
-	return (NULL);
 }
 
-t_node *build_graph(t_node **arr, char *str)
+void build_graph(t_node **arr, char *str)
 {
 	char **segs;
-	t_node *head;
 
 	segs = split_input(str, ' ');
-	head = link_nodes(arr, segs);
-	return (head);
+	link_nodes(arr, segs);
 }
 
 void get_max_path_rec(t_node *node, int cur)
 {
 	t_node **links;
+	t_node *link_node;
 
 	node->visited = 1;
 	links = node->links;
@@ -103,10 +102,11 @@ void get_max_path_rec(t_node *node, int cur)
 	node->max = (cur < node->max ) ? node->max : cur;
 	while (*links)
 	{
-		if (!(*links)->visited)
+		link_node = *links;
+		if (!link_node->visited)
 		{
-			get_max_path_rec(*links, cur);
-			(*links)->visited = 0;
+			get_max_path_rec(link_node, cur);
+			link_node->visited = 0;
 		}
 		links++;
 	}
@@ -183,9 +183,6 @@ int get_max_path(t_node **arr)
 
 void	g_diam(char *str)
 {
-	t_node **arr;
-
-	arr = malloc(1000000);
 	build_graph(arr, str);
 	get_max_path_info(arr);
 	ft_putnbr(get_max_path(arr));

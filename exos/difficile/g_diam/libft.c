@@ -9,7 +9,6 @@ int ft_strlen(char *s)
     return (i);
 }
 
-
 void	ft_putchar(char c)
 {
 	write(1, &c, 1);
@@ -31,7 +30,6 @@ void	ft_strcpy(char *d, char *s)
 	while ((*d++ = *s++))
 		;
 }
-
 
 char	*ft_strdup(char *s)
 {
