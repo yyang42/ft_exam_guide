@@ -6,7 +6,7 @@
 /*   By: yyang <yyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/12/18 10:38:03 by exam              #+#    #+#             */
-/*   Updated: 2015/01/28 10:42:20 by yyang            ###   ########.fr       */
+/*   Updated: 2015/01/28 18:39:34 by yyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,4 @@ typedef struct 		s_node
 	int				max;
 }					t_node;
 
-/*
-typedef struct		s_count
-{
-	int				count;
-	int				max;
-}					t_count;
-*/
 #endif

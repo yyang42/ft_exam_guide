@@ -1,0 +1,11 @@
+ft_strlen
+ft_strcat
+ft_strcpy
+ft_strdup
+ft_memcmp
+ft_strcmp
+ft_strstr
+ft_putnbr
+ft_putchar
+ft_atoi
+ft_itoa

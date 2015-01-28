@@ -65,7 +65,7 @@ char	**get_map(char *s)
 	map = (char **)malloc(100000);
 	i = 0;
 	j = 0;
-	map[j] = (char *)malloc(1030);
+	map[j] = (char *)malloc(2000);
 	while (*s)
 	{
 		map[j][i] = *s;
@@ -75,7 +75,7 @@ char	**get_map(char *s)
 			map[j][i] = 0;
 			i = 0;
 			j++;
-			map[j] = (char *)malloc(1030);
+			map[j] = (char *)malloc(2000);
 		}
 		s++;
 	}
