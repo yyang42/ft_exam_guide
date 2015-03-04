@@ -2,7 +2,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-
 void	ft_strcat(char *s1, char *s2)
 {
 	while (*s1)
@@ -21,16 +20,17 @@ char *read_map(char *map)
 	fd = open(map, O_RDONLY);
 	if (fd == -1)
 		return (NULL);
-	ret = 1;
 	map_str = malloc(1000000);
-	while ((ret = read (fd,buff, 10000)))
+	while ((ret = read(fd, buff, 10000)) > 0)
 	{
-		if (ret == -1)
-			return (NULL);
 		buff[ret] = 0;
+		if (buff[ret - 1] != '\n')
+			return (NULL);
 		ft_strcat(map_str, buff);
 	}
-	close (fd);
+	close(fd);
+	if (ret == -1)
+		return (NULL);
 	return (map_str);
 }
 
@@ -44,34 +44,14 @@ int	line_len(char *s)
 	return (i);
 }
 
-int	count_nl(char *s)
-{
-	int count;
-	int i;
-
-	count = 0;
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == '\n')
-			count++;
-		i++;
-	}
-	if (s[i - 1] != '\n')
-		return (-1);
-	return (count);
-}
-
 char **create_map(char *s)
 {
 	int len;
-	int nb_nl;
 	char **map;
 	int x;
 	int y;
 
 	len = line_len(s);
-	nb_nl = count_nl(s);
 	map = malloc(sizeof(char *) * 10000);
 	y = 0;
 	x = 0;
@@ -92,8 +72,6 @@ char **create_map(char *s)
 		s++;
 	}
 	map[y] = NULL;
-	if (y != nb_nl)
-		return (NULL);
 	return (map);
 }
 
@@ -142,14 +120,8 @@ void	ft_putstr(char *s)
 
 void	print_map(char **map)
 {
-	int y;
-
-	y = 0;
-	while (map[y])
-	{
-		ft_putstr(map[y]);
-		y++;
-	}
+	while (*map)
+		ft_putstr(*map++);
 }
 
 int	main(int ac, char **av)
