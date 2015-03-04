@@ -13,7 +13,7 @@ t_node *node_new(int node_val)
 	node = malloc(sizeof(t_node));
 	node->visited = 0;
 	node->value = node_val;
-	node->links = malloc(100000);
+	node->links = malloc(sizeof(t_node) * 10000);
 	node->max = 0;
 	*(node->links) = NULL;
 	return (node);
@@ -184,7 +184,7 @@ int get_max_path(t_node **arr)
 void	g_diam(char *str)
 {
 	build_graph(arr, str);
-	get_max_path_info(arr);
+	// get_max_path_info(arr);
 	ft_putnbr(get_max_path(arr));
 }
 
