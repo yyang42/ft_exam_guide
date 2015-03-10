@@ -101,3 +101,43 @@ t_list	*sort_list(t_list *lst, int (*cmp)(int, int))
 	return (new_lst);
 }
 
+/* ========================================================================== */
+#include <stdio.h>
+#include <stdlib.h>
+
+int cmp_fn(int i, int j)
+{
+	return (i < j);
+}
+void lst_print(t_list *lst)
+{
+	while (lst)
+	{
+		printf("n: %d\n", lst->data);
+		lst = lst->next;
+	}
+}
+t_list *lst_new(int i)
+{
+	t_list *lst;
+	lst = malloc(sizeof(t_list));
+	lst->data = i;
+	lst->next = NULL;
+	return (lst);
+}
+
+int main(void)
+{
+	t_list *list;
+
+	list = lst_new(3);
+	list->next = lst_new(1);
+	list->next->next = lst_new(2);
+	list->next->next->next = lst_new(500);
+	list->next->next->next->next = lst_new(4);
+
+	lst_print(list);
+	printf("======\n");
+	list = sort_list(list, cmp_fn);
+	lst_print(list);
+}
