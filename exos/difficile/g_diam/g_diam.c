@@ -1,198 +1,263 @@
-#include "g_diam.h"
 #include <unistd.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include "libft.c"
+#include <stdio.h>
 
-t_node *arr[1000000];
-
-t_node *node_new(int node_val)
+typedef struct s_node
 {
-	t_node *node;
+	int			value;
+	struct s_node **links;
+	int			visited;
+}		t_node;
 
-	node = malloc(sizeof(t_node));
-	node->visited = 0;
-	node->value = node_val;
-	node->links = malloc(sizeof(t_node) * 10000);
-	node->max = 0;
-	*(node->links) = NULL;
-	return (node);
+t_node *arr[10 * 1000 * 1000];
+int gmax = 0;
+
+void ft_putchar(char c)
+{
+	write(1, &c, 1);
 }
 
-
-t_node *get_node(t_node **arr, int val)
+void ft_putstr(char *s)
 {
-	if (arr[val])
-		return (arr[val]);
-	arr[val] = node_new(val);
-	return (arr[val]);
+	while (*s)
+		write(1, s++, 1);
 }
 
-char **split_input(char *str, char c)
+void ft_putnbr(int i)
 {
-	char **segs;
+	if (i < 10)
+	{
+		ft_putchar(i + '0');
+	}
+	else
+	{
+		ft_putnbr(i / 10);
+		ft_putnbr(i % 10);
+	}
+}
+
+int ft_strlen(char *s)
+{
+	int l;
+
+	l = 0;
+	while (s[l])
+		l++;
+	return (l);
+}
+
+int ft_atoi(char *s)
+{
 	int i;
 
-	segs = malloc(100000);
 	i = 0;
-	while (*str)
+	while (*s)
 	{
-		segs[i] = str;
-		while (*str != c && *str)
-			str++;
-		*str = 0;
-		str++;
-		i++;
+		i = i * 10 + *s - '0';
+		s++;
 	}
-	segs[i] = NULL;
+	return (i);
+}
+
+char **ft_strsplit(char *s, char c)
+{
+	char **segs;
+	int y;
+	int x;	
+	segs = malloc(sizeof(char *) * (ft_strlen(s) + 1));
+	y = 0;
+	x = 0;
+	segs[y] = malloc(sizeof(char) * (ft_strlen(s) + 1));
+	while (*s)
+	{
+		if (*s == c)
+		{
+			segs[y][x] = 0;
+			y++;
+			segs[y] = malloc(sizeof(char) * (ft_strlen(s) + 1));
+			x = 0;
+		}
+		else
+		{
+			segs[y][x] = *s;
+			x++;
+		}
+		s++;
+	}
+	segs[++y] = NULL;
 	return (segs);
 }
 
-void	add_relation(t_node *node1, t_node *node2)
+void printsegs(char **segs)
 {
-	t_node **links;
-	int i;
-
-	links = node1->links;
-	i = 0;
-	while (links[i])
-	{
-		if (links[i] == node2)
-			return ;
-		i++;
-	}
-	links[i] = node2;
-	links++;
-	links[i] = NULL;
-}
-
-void link_nodes(t_node **arr, char **segs)
-{
-	int node_val;
-	int link_val;
-
 	while (*segs)
 	{
-		node_val = ft_atoi(split_input(*segs, '-')[0]);
-		link_val = ft_atoi(split_input(*segs, '-')[1]);
-		add_relation(get_node(arr, node_val), get_node(arr, link_val));
-		add_relation(get_node(arr, link_val), get_node(arr, node_val));
+		ft_putstr(*segs);
+		ft_putstr("\n");
 		segs++;
 	}
 }
 
-void build_graph(t_node **arr, char *str)
-{
-	char **segs;
 
-	segs = split_input(str, ' ');
-	link_nodes(arr, segs);
+t_node *node_new(int val)
+{
+	t_node *node;
+
+	node = malloc(sizeof(t_node));
+	node->value = val;
+	node->visited = 0;
+	node->links = malloc(sizeof(t_node) * 10 * 1000);
+	node->links[0] = NULL;
+	return (node);
 }
 
-void get_max_path_rec(t_node *node, int cur)
+t_node *node_get(int val)
+{
+	if (!arr[val])
+		arr[val] = node_new(val);
+	return (arr[val]);
+}
+
+void add_links(t_node *n1, t_node *n2)
 {
 	t_node **links;
-	t_node *link_node;
+	int i;
 
-	node->visited = 1;
-	links = node->links;
-	// printf("cur %d\n", cur);
-	// printf("enter node: %d\n", node->value);
-	cur++;
-	node->max = (cur < node->max ) ? node->max : cur;
+	i = 0;
+	links = n1->links;
+	while (links[i])
+	{
+		if (links[i] == n2)
+			return ;
+		i++;
+	}
+	links[i] = n2;
+	links[i+1] = NULL;
+}
+
+void build_nodes(char **segs)
+{
+	int n1;
+	int n2;
+	while (*segs)
+	{
+		n1 = ft_atoi(ft_strsplit(*segs, '-')[0]);
+		n2 = ft_atoi(ft_strsplit(*segs, '-')[1]);
+		add_links(node_get(n1), node_get(n2));
+		add_links(node_get(n2), node_get(n1));
+		segs++;
+	}
+	(void)segs;
+}
+
+void check_links(t_node **links)
+{
+	printf("link: ");
 	while (*links)
 	{
-		link_node = *links;
-		if (!link_node->visited)
+	printf("%d ", (*links)->value);
+		links++;
+	}
+	printf("\n");
+}
+
+void check_nodes(void)
+{
+	int i;
+	t_node *n;
+
+	i = 0;
+	while (i < 10 * 1000 * 1000)
+	{
+		if (arr[i] != NULL)
 		{
-			get_max_path_rec(link_node, cur);
-			link_node->visited = 0;
+			n = arr[i];
+			printf("val: %d\n", n->value);
+			check_links(n->links);
+		}
+		i++;
+	}
+}
+
+void reset_graph(void)
+{
+	int i;
+	t_node *n;
+
+	i = 0;
+	while (i < 10 * 1000 * 1000)
+	{
+		if (arr[i] != NULL)
+		{
+			n = arr[i];
+			n->visited = 0;
+		}
+		i++;
+	}
+}
+void max_rec(t_node *n, int cur_max)
+{
+	t_node **links;
+	t_node *l_node;
+
+	n->visited = 1;
+	links = n->links;
+	cur_max++;
+	if (cur_max > gmax)
+		gmax = cur_max;
+	while (*links)
+	{
+		l_node = *links;
+		if (!l_node->visited)
+		{
+			max_rec(l_node, cur_max);
+			l_node->visited = 0;
 		}
 		links++;
 	}
 }
 
-void print_links(t_node *node)
+void node_build_max(void)
 {
-	t_node **links;
-
-	links = node->links;
-	while (*links)
-	{
-		// printf("node: %d\n", (*links)->value);
-		links++;
-	}
-}
-
-int get_max_path_info(t_node **arr)
-{
-	int global_max;
 	int i;
+	t_node *n;
 
-	global_max = 0;
 	i = 0;
-	while (i < 100000)
+	while (i < 10 * 1000 * 1000)
 	{
-		if (arr[i])
+		if (arr[i] != NULL)
 		{
-			// printf("== start node %d ==\n", arr[i]->value);
-			print_links(arr[i]);
+			n = arr[i];
+			max_rec(n, 0);
+			reset_graph();
 		}
 		i++;
 	}
-	// printf("====================\n");
-	return (global_max);
-}
-
-void reset_graph(t_node **arr)
-{
-	int i;
-
-	i = 0;
-	while (i < 100000)
-	{
-		if (arr[i])
-		{
-			arr[i]->visited = 0;	
-		}
-		i++;
-	}
-}
-
-int get_max_path(t_node **arr)
-{
-	int global_max;
-	int i;
-
-	global_max = 0;
-	i = 0;
-	while (i < 100000)
-	{
-		if (arr[i])
-		{
-			// printf("== start node %d ==\n", arr[i]->value);
-			get_max_path_rec(arr[i], 1);
-			arr[i]->max--;
-			global_max = (global_max < arr[i]->max) ? arr[i]->max : global_max;
-			reset_graph(arr);
-		}
-		i++;
-	}
-	return (global_max);
-}
-
-void	g_diam(char *str)
-{
-	build_graph(arr, str);
-	// get_max_path_info(arr);
-	ft_putnbr(get_max_path(arr));
 }
 
 int main(int ac, char **av)
 {
+	char **segs;
+
 	if (ac == 2)
-		g_diam(ft_strdup(av[1]));
-	write(1, "\n", 1);
-	(void)av;
+	{
+		//ft_putstr(av[1]);	
+		//ft_putstr("\n=== atoi\n");
+		//printf("%d\n", ft_atoi("123456"));
+		//ft_putstr("\n=== av\n");
+		//ft_putstr(av[1]);
+		segs = ft_strsplit(av[1], ' ');
+		//ft_putstr("\n=== segs\n");
+		//printsegs(segs);
+		//ft_putstr("\n=== nodes\n");
+		build_nodes(segs);
+		//ft_putstr("\n=== check nodes\n");
+		//check_nodes();
+		node_build_max();
+		//ft_putstr("\n=== max\n");
+		ft_putnbr(gmax);
+	}
+	ft_putstr("\n");	
 	return (0);
 }
+
