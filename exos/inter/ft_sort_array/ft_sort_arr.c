@@ -6,7 +6,7 @@
 /*   By: yyang <yyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/04 21:29:56 by juschaef          #+#    #+#             */
-/*   Updated: 2015/01/04 22:38:40 by yyang            ###   ########.fr       */
+/*   Updated: 2015/02/22 10:53:59 by hivian           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,14 @@ static void		strswap(char **s1, char **s2)
 void	ft_sort_arr(char **tab, int size)
 {
 	int		i;
-	int		j;
 
 	i = 0;
 	while (i < size - 1)
 	{
-		j = 0;
-		while (j < size - 1 - i)
+		if (ft_strcmp(tab[i], tab[i + 1]) > 0)
 		{
-			if (ft_strcmp(tab[j + 1], tab[j]) < 0)
-				strswap(&tab[j + 1], &tab[j]);
-			j++;
+			strswap(&tab[i], &tab[i + 1]);
+			i = -1;
 		}
 		i++;
 	}
