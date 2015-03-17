@@ -37,15 +37,15 @@ static void print(char *res)
 	}
 }
 
-static void add(char *res, int l1, int l2, char *nb1, char *nb2)
+static void add(char *res, int i1, int i2, char *nb1, char *nb2)
 {
 	int		unit_i;
 	int		dec_i;
 
-	unit_i = l1+l2+1;
-	dec_i = l1+l2;
+	unit_i = i1+i2+1;
+	dec_i = i1+i2;
 
-	res[unit_i] += (nb1[l1] - '0') * (nb2[l2] - '0');
+	res[unit_i] += (nb1[i1] - '0') * (nb2[i2] - '0');
 	res[dec_i] += res[unit_i] / 10;
 	res[unit_i] %= 10;
 }
@@ -53,26 +53,27 @@ static void add(char *res, int l1, int l2, char *nb1, char *nb2)
 static char *mult(char *nb1, char *nb2)
 {
 	char	*res;
-	int		l1 = ft_strlen(nb1);
-	int		l2 = ft_strlen(nb2);
-	int		l2_sav;
+	int		res_size;
+	int		i2_sav;
+	int		i1;
+	int		i2;
 
-	res = malloc(sizeof(*res) * (l1 + l2 + 1));
-	ft_bzero(res, (l1 + l2 + 1));
-	res[(l1 + l2)] = END_OF_STRING;
-
-	l1--; // index
-	l2--; // index
-	l2_sav = l2;
-	while (l1 >= 0)
+	res_size = ft_strlen(nb1) + ft_strlen(nb2);
+	res = malloc(sizeof(char) * (res_size + 1));
+	ft_bzero(res, res_size + 1);
+	res[res_size] = END_OF_STRING;
+	i1 = ft_strlen(nb1) - 1;
+	i2 = ft_strlen(nb2) - 1;
+	i2_sav = i2;
+	while (i1 >= 0)
 	{
-		l2 = l2_sav;
-		while (l2 >= 0)
+		i2 = i2_sav;
+		while (i2 >= 0)
 		{
-			add(res, l1, l2, nb1, nb2);
-			l2--;
+			add(res, i1, i2, nb1, nb2);
+			i2--;
 		}
-		l1--;
+		i1--;
 	}
 	return (res);
 }
@@ -81,6 +82,11 @@ static void mult_wrapper(char *nb1, char *nb2)
 {
 	int       neg;
 
+	if (nb1[0] == '0' || nb1[0] == 0 || nb2[0] == '0' || nb2[0] == 0)
+	{
+		write(1, "0", 1);
+		return;
+	}
 	neg = 0;
 	if (nb1[0] == '-')
 	{
@@ -94,11 +100,6 @@ static void mult_wrapper(char *nb1, char *nb2)
 	}
 	if (neg)
 		write(1, "-", 1);
-	if (nb1[0] == '0' || nb1[0] == 0 || nb2[0] == '0' || nb2[0] == 0)
-	{
-		write(1, "0", 1);
-		return;
-	}
 	print(mult(nb1, nb2));
 }
 
@@ -107,4 +108,5 @@ int     main(int ac, char **av)
 	if (ac == 3)
 		mult_wrapper(av[1], av[2]);
 	write(1, "\n", 1);
+	return (0);
 }
