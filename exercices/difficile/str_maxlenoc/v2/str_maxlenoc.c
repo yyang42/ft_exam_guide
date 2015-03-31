@@ -61,7 +61,7 @@ char *ft_strstr(char *h, char *n)
 	return (NULL);
 }
 
-char *max;
+char *local_max;
 
 char *match_right(char *s1, char *s2)
 {
@@ -72,18 +72,16 @@ char *match_right(char *s1, char *s2)
 	{
 		if (ft_strstr(s2, c1))
 		{
-			if (ft_strlen(c1) > ft_strlen(max))
-				max = ft_strdup(c1);
+			if (ft_strlen(c1) > ft_strlen(local_max))
+				local_max = ft_strdup(c1);
 		}
 		c1[ft_strlen(c1) - 1] = 0;
 	}
-	(void)s2;
 	return (s1);
 }
 
 char *match_left(char *s1, char *s2)
 {
-	(void)s2;
 	while (*s1)
 	{
 		match_right(s1, s2);
@@ -94,19 +92,19 @@ char *match_left(char *s1, char *s2)
 
 void maxlenoc(char **segs)
 {
-	char *cur_max;
+	char *gle_max;
 
-	cur_max = *segs;
+	gle_max = *segs;
 	segs++;
 	while (*segs)
 	{
-		max = "";
-		match_left(cur_max, *segs);
-		if (ft_strlen(max) < ft_strlen(cur_max))
-			cur_max = max;
+		local_max = "";
+		match_left(gle_max, *segs);
+		if (ft_strlen(local_max) < ft_strlen(gle_max))
+			gle_max = local_max;
 		segs++;
 	}
-	ft_putstr(cur_max);
+	ft_putstr(gle_max);
 }
 
 int main(int ac, char **av)
