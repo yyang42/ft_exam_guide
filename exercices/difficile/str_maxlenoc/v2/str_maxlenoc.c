@@ -63,7 +63,7 @@ char *ft_strstr(char *h, char *n)
 
 char *local_max;
 
-char *match_right(char *s1, char *s2)
+void match_right(char *s1, char *s2)
 {
 	char *c1;
 
@@ -77,17 +77,15 @@ char *match_right(char *s1, char *s2)
 		}
 		c1[ft_strlen(c1) - 1] = 0;
 	}
-	return (s1);
 }
 
-char *match_left(char *s1, char *s2)
+void match_left(char *s1, char *s2)
 {
 	while (*s1)
 	{
 		match_right(s1, s2);
 		s1++;
 	}
-	return (s1);
 }
 
 void maxlenoc(char **segs)
