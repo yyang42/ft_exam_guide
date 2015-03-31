@@ -2,14 +2,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct s_node
+typedef struct		s_node
 {
-	int			value;
-	struct s_node **links;
-	int			visited;
-}		t_node;
+	int				value;
+	struct s_node	**links;
+	int				visited;
+}					t_node;
 
-t_node *arr[10 * 1000 * 1000];
+#define M10 10 * 1000 * 1000
+
+t_node *arr[M10];
 int gmax = 0;
 
 void ft_putchar(char c)
@@ -118,20 +120,20 @@ t_node *node_get(int val)
 	return (arr[val]);
 }
 
-void add_links(t_node *n1, t_node *n2)
+void node_link(t_node *node, t_node *link)
 {
 	t_node **links;
 	int i;
 
 	i = 0;
-	links = n1->links;
+	links = node->links;
 	while (links[i])
 	{
-		if (links[i] == n2)
+		if (links[i] == link)
 			return ;
 		i++;
 	}
-	links[i] = n2;
+	links[i] = link;
 	links[i+1] = NULL;
 }
 
@@ -139,15 +141,15 @@ void build_nodes(char **segs)
 {
 	int n1;
 	int n2;
+
 	while (*segs)
 	{
 		n1 = ft_atoi(ft_strsplit(*segs, '-')[0]);
 		n2 = ft_atoi(ft_strsplit(*segs, '-')[1]);
-		add_links(node_get(n1), node_get(n2));
-		add_links(node_get(n2), node_get(n1));
+		node_link(node_get(n1), node_get(n2));
+		node_link(node_get(n2), node_get(n1));
 		segs++;
 	}
-	(void)segs;
 }
 
 void check_links(t_node **links)
@@ -155,7 +157,7 @@ void check_links(t_node **links)
 	printf("link: ");
 	while (*links)
 	{
-	printf("%d ", (*links)->value);
+		printf("%d ", (*links)->value);
 		links++;
 	}
 	printf("\n");
@@ -167,7 +169,7 @@ void check_nodes(void)
 	t_node *n;
 
 	i = 0;
-	while (i < 10 * 1000 * 1000)
+	while (i < M10)
 	{
 		if (arr[i] != NULL)
 		{
@@ -185,7 +187,7 @@ void reset_graph(void)
 	t_node *n;
 
 	i = 0;
-	while (i < 10 * 1000 * 1000)
+	while (i < M10)
 	{
 		if (arr[i] != NULL)
 		{
@@ -195,6 +197,7 @@ void reset_graph(void)
 		i++;
 	}
 }
+
 void max_rec(t_node *n, int cur_max)
 {
 	t_node **links;
@@ -223,7 +226,7 @@ void node_build_max(void)
 	t_node *n;
 
 	i = 0;
-	while (i < 10 * 1000 * 1000)
+	while (i < M10)
 	{
 		if (arr[i] != NULL)
 		{

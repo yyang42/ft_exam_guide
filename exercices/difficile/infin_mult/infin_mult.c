@@ -47,14 +47,14 @@ static void print(char *res)
 	}
 }
 
-void add(char *res, int i1, int i2, char *n1, char *n2)
+void add(char *res, int i1, int i2, char c1, char c2)
 {
 	int		unit_i;
 	int		dec_i;
 
 	unit_i = i1+i2+1;
 	dec_i = i1+i2;
-	res[unit_i] += (n1[i1] - '0') * (n2[i2] - '0');
+	res[unit_i] += (c1 - '0') * (c2 - '0');
 	res[dec_i] += res[unit_i] / 10;
 	res[unit_i] %= 10;
 }
@@ -80,7 +80,7 @@ static char *mult(char *n1, char *n2)
 		while (i2 >= 0)
 		{
 			printf("n1[%d]: %c n2[%d]: %c\n", i1, n1[i1], i2, n2[i2]);
-			add(res, i1, i2, n1, n2);
+			add(res, i1, i2, n1[i1], n2[i2]);
 			print(res);
 			printf("\n");
 			i2--;

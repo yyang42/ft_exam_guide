@@ -1,18 +1,16 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   str_maxlenoc.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: yyang <yyang@student.42.fr>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/12/19 21:42:22 by juschaef          #+#    #+#             */
-/*   Updated: 2015/01/28 14:35:52 by yyang            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <unistd.h>
 #include <stdlib.h>
+
+
+
+
+
 #include <stdio.h>
+
+
+
+
+
 
 int		ft_strlen(char *s)
 {
@@ -66,6 +64,7 @@ char 	*match_from_end(char *s, char *m)
 	cpy = ft_strdup(m);
 	while (*cpy)
 	{
+		printf("cpy: %s\n", cpy);
 		if (ft_strstr(s, cpy))
 			return (cpy);
 		cpy[ft_strlen(cpy) - 1] = 0;
